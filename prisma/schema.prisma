@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Promotion {
+  id             Int      @id @default(autoincrement())
+  name           String
+  startDate      DateTime
+  endDate        DateTime
+  discountAmount String
+  code           String?
+  books          Book[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("promotions")
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  bookId    Int
+  book      Book     @relation(fields: [bookId], references: [id])
+  rating    Decimal
+  comment   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([bookId])
+  @@map("reviews")
+}
+
+model Genre {
+  id        Int           @id @default(autoincrement())
+  name      String
+  books     BooksGenres[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("genres")
+}
+
+model Book {
+  id             Int           @id @default(autoincrement())
+  title          String
+  author         String
+  image          String
+  publishedDate  DateTime?
+  price          Decimal
+  stock_quantity Decimal?
+  promotionId    Int?
+  promotion      Promotion?    @relation(fields: [promotionId], references: [id])
+  reviews        Review[]
+  genres         BooksGenres[]
+  orderDetails   OrderDetail[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([promotionId])
+  @@map("books")
+}
+
+model BooksGenres {
+  bookId  Int
+  book    Book  @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  genreId Int
+  genre   Genre @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([bookId, genreId])
+  @@index([bookId])
+  @@index([genreId])
+  @@map("books_genres")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  fullName  String?
+  username  String
+  email     String   @unique
+  password  String
+  phone     String   @default("")
+  image     String   @default("")
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews Review[]
+  orders  Order[]
+
+  @@map("users")
+}
+
+model Order {
+  id           Int           @id @default(autoincrement())
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName     String
+  address      String
+  phone        String
+  status       String
+  amount       Decimal
+  orderDetails OrderDetail[]
+  createdAt    DateTime
+  updatedAt    DateTime
+
+  @@index([userId])
+  @@map("orders")
+}
+
+model OrderDetail {
+  id      Int   @id @default(autoincrement())
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  bookId  Int
+  book    Book  @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([bookId])
+  @@map("order_details")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
