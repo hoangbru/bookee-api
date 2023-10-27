@@ -9,7 +9,11 @@ import {
 
 const bookRouter = Router();
 
-bookRouter.route("/books").get(getAllBooks).post(createBook);
+bookRouter
+  .route("/books")
+  .get(getAllBooks)
+  .post(createBook);
+
 bookRouter
   .route("/book/:id")
   .get(getBookById)

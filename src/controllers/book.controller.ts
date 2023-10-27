@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 
 const bookPrisma = new PrismaClient().book;
+const genrePrisma = new PrismaClient().genre;
 
 export const createBook = async (req: Request, res: Response) => {
   try {
@@ -31,10 +32,6 @@ export const getAllBooks = async (req: Request, res: Response) => {
     const books = await bookPrisma.findMany({
       take: itemPerPage,
       skip,
-      include: {
-        genres: true,
-        promotion: true,
-      },
       orderBy: {
         createdAt: "desc",
       },
@@ -71,9 +68,19 @@ export const getBookById = async (req: Request, res: Response) => {
     });
 
     if (!book) return res.status(404).json({ message: "Book not found" });
+
+    const genreIds = book.genres.map((genre) => genre.genreId);
+    const genres = await genrePrisma.findMany({
+      where: {
+        id: {
+          in: genreIds,
+        },
+      },
+    });
+
     return res
       .status(200)
-      .json({ message: "Successfully excuted", data: book });
+      .json({ message: "Successfully executed", data: { ...book, genres } });
   } catch (error) {
     return res.status(500).json({
       message: error,

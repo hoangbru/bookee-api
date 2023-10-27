@@ -9,7 +9,11 @@ import {
 
 const genreRouter = Router();
 
-genreRouter.route("/genres").get(getAllGenres).post(createGenre);
+genreRouter
+  .route("/genres")
+  .get(getAllGenres)
+  .post(createGenre);
+
 genreRouter
   .route("/genre/:id")
   .get(getGenreById)
