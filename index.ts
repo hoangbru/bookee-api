@@ -9,15 +9,15 @@ import {
   booksGenresRouter,
   orderRouter,
   orderDetailRouter,
-} from "./routes";
+} from "./src/routes";
 
 dotenv.config();
 
-const PORT: number = 8080
+const port: number = 8080
 
 const app = express();
 
-const routes = [
+const routers = [
   authRouter,
   bookRouter,
   genreRouter,
@@ -29,8 +29,8 @@ const routes = [
 app.use(cors());
 app.use(express.json());
 
-app.use("/api", ...routes);
+app.use("/api", ...routers);
 
-app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server listening on http://localhost:${port}`);
 });
