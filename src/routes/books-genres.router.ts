@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   createBooksGenres,
   getAllBooksGenres,
-} from "../controllers/booksGenres.controller";
+} from "../controllers/books-genres.controller";
 
 const bookRouter = Router();
 

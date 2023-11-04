@@ -13,7 +13,7 @@ datasource db {
 
 model Promotion {
   id             Int      @id @default(autoincrement())
-  name           String
+  name           String   @unique
   startDate      DateTime
   endDate        DateTime
   discountAmount String
@@ -43,7 +43,7 @@ model Review {
 
 model Genre {
   id        Int           @id @default(autoincrement())
-  name      String
+  name      String        @unique
   books     BooksGenres[]
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
@@ -86,7 +86,7 @@ model BooksGenres {
 model User {
   id        Int      @id @default(autoincrement())
   fullName  String?
-  username  String
+  username  String   @unique
   email     String   @unique
   password  String
   phone     String   @default("")
@@ -103,16 +103,18 @@ model User {
 
 model Order {
   id           Int           @id @default(autoincrement())
-  userId       Int
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code         String?       @unique
+  orderType    String        @default("0")
+  userId       Int?
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
   fullName     String
   address      String
   phone        String
-  status       String
-  amount       Decimal
+  status       String        @default("0")
+  amount       Decimal?
   orderDetails OrderDetail[]
-  createdAt    DateTime
-  updatedAt    DateTime
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@index([userId])
   @@map("orders")

@@ -1,11 +1,14 @@
-import * as dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import * as dotenv from "dotenv";
+
 import {
   authRouter,
   bookRouter,
   genreRouter,
   booksGenresRouter,
+  orderRouter,
+  orderDetailRouter,
 } from "./routes";
 
 dotenv.config();
@@ -18,7 +21,14 @@ const PORT: number = parseInt(process.env.PORT as string, 10);
 
 const app = express();
 
-const routes = [authRouter, bookRouter, genreRouter, booksGenresRouter];
+const routes = [
+  authRouter,
+  bookRouter,
+  genreRouter,
+  booksGenresRouter,
+  orderRouter,
+  orderDetailRouter,
+];
 
 app.use(cors());
 app.use(express.json());
