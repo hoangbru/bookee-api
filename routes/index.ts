@@ -1,15 +1,15 @@
 import authRouter from "./auth.router";
 import bookRouter from "./book.router";
-import genreRouter from "./genre.router";
-import booksGenresRouter from "./books-genres.router";
+import categoryRouter from "./category.router";
 import orderRouter from "./order.router";
 import orderDetailRouter from "./order-detail.router";
+import userRouter from "./user.router";
 
 export {
   authRouter,
   bookRouter,
-  genreRouter,
-  booksGenresRouter,
+  categoryRouter,
   orderRouter,
   orderDetailRouter,
+  userRouter,
 }

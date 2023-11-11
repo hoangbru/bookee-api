@@ -16,7 +16,7 @@ export const register = async (req: Request, res: Response) => {
     });
 
     if (userExist)
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "Người dùng đã tồn tại" });
 
     const hasedPassword = await bcrypt.hash(password, 10);
     const user = await authPrisma.create({
@@ -36,7 +36,7 @@ export const register = async (req: Request, res: Response) => {
     });
 
     return res.status(200).json({
-      message: "Registration successful",
+      message: "Đăng ký thành công",
       data: user,
     });
   } catch (error) {
@@ -57,26 +57,28 @@ export const login = async (req: Request, res: Response) => {
     });
 
     if (!user)
-      return res.status(404).json({ message: "Account does not exist" });
+      return res.status(404).json({ message: "Tài khoản không tồn tại" });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res.status(400).json({ message: "Mật khẩu không khớp" });
 
     const token = jwt.sign({ id: user.id }, `${process.env.JWT_SECRET}`, {
       expiresIn: "24h",
     });
 
     const userLogin = {
+      userId: user.id,
       fullName: user.fullName,
       username: user.username,
       email: user.email,
       phone: user.phone,
       image: user.image,
+      role: user.role
     };
 
     return res.status(200).json({
-      message: "Login successful",
+      message: "Đăng nhập thành công",
       data: {
         accessToken: token,
         information: userLogin,

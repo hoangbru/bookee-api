@@ -3,18 +3,12 @@ import { Request, Response } from "express";
 import { generateRandomString } from "../helpers/randomString";
 
 const orderPrisma = new PrismaClient().order;
-const orderDetailPrisma = new PrismaClient().orderDetail;
 const userPrisma = new PrismaClient().user;
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
     const body = req.body;
     const userId = body.userId;
-    const orderAmount = body.items
-      ? body.items.reduce((sum: any, item: any) => {
-          return sum + item.price * item.quantity;
-        }, 0)
-      : 0;
 
     const user = await userPrisma.findUnique({
       where: {
@@ -22,15 +16,16 @@ export const createOrder = async (req: Request, res: Response) => {
       },
     });
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user)
+      return res.status(404).json({ message: "Không tìm thấy người dùng" });
 
     const order = await orderPrisma.create({
-      data: { ...body, code: generateRandomString(), amount: orderAmount },
+      data: { ...body, code: generateRandomString() },
     });
 
-    if (!order) return res.status(400).json({ message: "Failed added" });
+    if (!order) return res.status(400).json({ message: "Đặt hàng thất bại" });
 
-    return res.status(201).json({ message: "Successfully added", data: order });
+    return res.status(201).json({ message: "Đặt hàng thành công", data: order });
   } catch (error) {
     return res.status(500).json({
       message: error,
@@ -41,7 +36,7 @@ export const createOrder = async (req: Request, res: Response) => {
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
     const query = req.query;
-    const itemPerPage = Number(query.item_per_page) || 9;
+    const itemPerPage = Number(query.item_per_page) || 10;
     const page = Number(query.page) || 1;
     const skip = page > 1 ? (page - 1) * itemPerPage : 0;
     const total = await orderPrisma.count();
@@ -49,13 +44,26 @@ export const getAllOrders = async (req: Request, res: Response) => {
     const orders = await orderPrisma.findMany({
       take: itemPerPage,
       skip,
+      include: {
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            username: true,
+            address: true,
+            phone: true,
+            email: true,
+            image: true,
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },
     });
 
     return res.status(200).json({
-      message: "Successfully excuted",
+      message: "Thực hiện thành công",
       data: orders,
       result: {
         currentPage: page,
@@ -79,32 +87,34 @@ export const getOrderById = async (req: Request, res: Response) => {
         id: orderId,
       },
       include: {
+        orderDetails: {
+          select: {
+            id: true,
+            orderId: true,
+            bookId: true,
+            book: true,
+            quantity: true,
+          }
+        },
         user: {
           select: {
+            id: true,
             fullName: true,
             username: true,
+            address: true,
+            phone: true,
             email: true,
             image: true,
           },
         },
-        orderDetails: true,
       },
     });
 
-    if (!order) return res.status(404).json({ message: "Book not found" });
-
-    const orderDetailIds = order.orderDetails.map((item) => item.orderId);
-    const orderDetails = await orderDetailPrisma.findMany({
-      where: {
-        id: {
-          in: orderDetailIds,
-        },
-      },
-    });
+    if (!order) return res.status(404).json({ message: "Không tìm thấy sách" });
 
     return res.status(200).json({
-      message: "Successfully executed",
-      data: { ...order, orderDetails },
+      message: "Thực hiện thành công",
+      data: order,
     });
   } catch (error) {
     return res.status(500).json({
@@ -125,7 +135,8 @@ export const updateOrder = async (req: Request, res: Response) => {
       },
     });
 
-    if (!orderById) return res.status(404).json({ message: "Order not found" });
+    if (!orderById)
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
 
     const order = await orderPrisma.update({
       where: {
@@ -138,11 +149,11 @@ export const updateOrder = async (req: Request, res: Response) => {
       },
     });
 
-    if (!order) return res.status(400).json({ message: "Failed updated" });
+    if (!order) return res.status(400).json({ message: "Cập nhật thất bại" });
 
     return res
       .status(200)
-      .json({ message: "Successfully updated", data: order });
+      .json({ message: "Cập nhật thành công", data: order });
   } catch (error) {
     return res.status(500).json({
       message: error,

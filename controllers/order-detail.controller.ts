@@ -11,29 +11,19 @@ export const createOrderDetail = async (req: Request, res: Response) => {
     const data: any[] = [];
 
     for (const item of body) {
-
       const order = await orderPrisma.findUnique({
         where: {
           id: item.orderId,
         },
       });
-      if (!order) return res.status(400).json({ message: "Order not found" });
+      if (!order) return res.status(400).json({ message: "Không tìm thấy đơn hàng" });
 
-      const book = await orderPrisma.findUnique({
+      const book = await bookPrisma.findUnique({
         where: {
           id: item.bookId,
         },
       });
-      if (!book) return res.status(400).json({ message: "Book not found" });
-
-      const existingOrderDetail = await orderDetailPrisma.findMany({
-        where: {
-          orderId: item.orderId,
-          bookId: item.bookId
-        }
-      })
-
-      if(existingOrderDetail) return res.status(400).json({ message: "Order detail already exists" });
+      if (!book) return res.status(400).json({ message: "Không tìm thấy sách" });
 
       const orderDetail = await orderDetailPrisma.create({
         data: item,
@@ -44,10 +34,10 @@ export const createOrderDetail = async (req: Request, res: Response) => {
       }
 
       if (!orderDetail)
-        return res.status(400).json({ message: "Failed added" });
+        return res.status(400).json({ message: "Thêm thất bại" });
     }
 
-    return res.status(201).json({ message: "Successfully added", data: data });
+    return res.status(201).json({ message: "Thêm thành công", data: data });
   } catch (error) {
     return res.status(500).json({
       message: error,
@@ -58,7 +48,7 @@ export const createOrderDetail = async (req: Request, res: Response) => {
 export const getAllOrderDetails = async (req: Request, res: Response) => {
   try {
     const query = req.query;
-    const itemPerPage = Number(query.item_per_page) || 9;
+    const itemPerPage = Number(query.item_per_page) || 10;
     const page = Number(query.page) || 1;
     const skip = page > 1 ? (page - 1) * itemPerPage : 0;
     const total = await bookPrisma.count();
@@ -72,7 +62,7 @@ export const getAllOrderDetails = async (req: Request, res: Response) => {
     });
 
     return res.status(200).json({
-      message: "Successfully excuted",
+      message: "Thực hiện thành công",
       data: books,
       result: {
         currentPage: page,
@@ -96,16 +86,15 @@ export const getOrderDetailById = async (req: Request, res: Response) => {
         id: bookId,
       },
       include: {
-        genres: true,
         promotion: true,
       },
     });
 
-    if (!book) return res.status(404).json({ message: "Book not found" });
+    if (!book) return res.status(404).json({ message: "Không tìm thấy sách" });
 
     return res
       .status(200)
-      .json({ message: "Successfully executed", data: book });
+      .json({ message: "Thực hiện thành công", data: book });
   } catch (error) {
     return res.status(500).json({
       message: error,
@@ -125,7 +114,7 @@ export const updateOrderDetail = async (req: Request, res: Response) => {
       },
     });
 
-    if (!bookById) return res.status(404).json({ message: "Book not found" });
+    if (!bookById) return res.status(404).json({ message: "Không tìm thấy sách" });
 
     const book = await bookPrisma.update({
       where: {
@@ -134,11 +123,11 @@ export const updateOrderDetail = async (req: Request, res: Response) => {
       data: body,
     });
 
-    if (!book) return res.status(400).json({ message: "Failed updated" });
+    if (!book) return res.status(400).json({ message: "Cập nhật thất bại" });
 
     return res
       .status(200)
-      .json({ message: "Successfully updated", data: book });
+      .json({ message: "Cập nhật thành công", data: book });
   } catch (error) {
     return res.status(500).json({
       message: error,

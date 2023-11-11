@@ -5,11 +5,11 @@ import * as dotenv from "dotenv";
 import {
   authRouter,
   bookRouter,
-  genreRouter,
-  booksGenresRouter,
+  categoryRouter,
   orderRouter,
   orderDetailRouter,
-} from "./src/routes";
+  userRouter,
+} from "./routes";
 
 dotenv.config();
 
@@ -20,10 +20,10 @@ const app = express();
 const routers = [
   authRouter,
   bookRouter,
-  genreRouter,
-  booksGenresRouter,
+  categoryRouter,
   orderRouter,
   orderDetailRouter,
+  userRouter,
 ];
 
 app.use(cors());

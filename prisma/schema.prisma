@@ -11,8 +11,19 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  books     Book[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
 model Promotion {
   id             Int      @id @default(autoincrement())
+  type           String   @default("0")
   name           String   @unique
   startDate      DateTime
   endDate        DateTime
@@ -41,46 +52,27 @@ model Review {
   @@map("reviews")
 }
 
-model Genre {
-  id        Int           @id @default(autoincrement())
-  name      String        @unique
-  books     BooksGenres[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-
-  @@map("genres")
-}
-
 model Book {
   id             Int           @id @default(autoincrement())
   title          String
   author         String
-  image          String
+  image          String?
   publishedDate  DateTime?
+  description    String?
   price          Decimal
   stock_quantity Decimal?
+  categoryId     Int?
+  category       Category?     @relation(fields: [categoryId], references: [id])
   promotionId    Int?
   promotion      Promotion?    @relation(fields: [promotionId], references: [id])
   reviews        Review[]
-  genres         BooksGenres[]
   orderDetails   OrderDetail[]
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
+  @@index([categoryId])
   @@index([promotionId])
   @@map("books")
-}
-
-model BooksGenres {
-  bookId  Int
-  book    Book  @relation(fields: [bookId], references: [id], onDelete: Cascade)
-  genreId Int
-  genre   Genre @relation(fields: [genreId], references: [id], onDelete: Cascade)
-
-  @@id([bookId, genreId])
-  @@index([bookId])
-  @@index([genreId])
-  @@map("books_genres")
 }
 
 model User {
@@ -89,6 +81,7 @@ model User {
   username  String   @unique
   email     String   @unique
   password  String
+  address   String   @default("")
   phone     String   @default("")
   image     String   @default("")
   role      Role     @default(USER)
@@ -104,13 +97,14 @@ model User {
 model Order {
   id           Int           @id @default(autoincrement())
   code         String?       @unique
-  orderType    String        @default("0")
-  userId       Int?
-  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  fullName     String
-  address      String
-  phone        String
-  status       String        @default("0")
+  orderType    String?       @default("0")
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName     String?
+  address      String?
+  phone        String?
+  email        String?
+  status       String?       @default("0")
   amount       Decimal?
   orderDetails OrderDetail[]
   createdAt    DateTime      @default(now())
@@ -121,11 +115,12 @@ model Order {
 }
 
 model OrderDetail {
-  id      Int   @id @default(autoincrement())
-  orderId Int
-  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  bookId  Int
-  book    Book  @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  id       Int      @id @default(autoincrement())
+  orderId  Int
+  order    Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  bookId   Int
+  book     Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  quantity Decimal?
 
   @@index([orderId])
   @@index([bookId])
