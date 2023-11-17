@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 
 const bookPrisma = new PrismaClient().book;
@@ -24,14 +24,27 @@ export const createBook = async (req: Request, res: Response) => {
 export const getAllBooks = async (req: Request, res: Response) => {
   try {
     const query = req.query;
+    const searchTerm = query.title ? query.title.toString().toLowerCase() : "";
+    const categoryId = query.categoryId
+      ? parseInt(query.categoryId.toString(), 10)
+      : undefined;
     const itemPerPage = Number(query.item_per_page) || 10;
     const page = Number(query.page) || 1;
     const skip = page > 1 ? (page - 1) * itemPerPage : 0;
     const total = await bookPrisma.count();
 
+    const whereCondition: Prisma.BookWhereInput = {
+      title: {
+        contains: searchTerm,
+        mode: "insensitive",
+      },
+      categoryId: categoryId !== undefined ? { equals: categoryId } : undefined,
+    };
+
     const books = await bookPrisma.findMany({
       take: itemPerPage,
       skip,
+      where: whereCondition,
       include: {
         category: true,
         reviews: true,
@@ -75,15 +88,13 @@ export const getBookById = async (req: Request, res: Response) => {
 
     if (!book) return res.status(404).json({ message: "Không tìm thấy sách" });
 
-    return res
-      .status(200)
-      .json({
-        message: "Thực hiện thành công",
-        data: {
-          ...book,
-          category: { id: book.category?.id, name: book.category?.name },
-        },
-      });
+    return res.status(200).json({
+      message: "Thực hiện thành công",
+      data: {
+        ...book,
+        category: { id: book.category?.id, name: book.category?.name },
+      },
+    });
   } catch (error) {
     return res.status(500).json({
       message: error,
@@ -103,7 +114,8 @@ export const updateBook = async (req: Request, res: Response) => {
       },
     });
 
-    if (!bookById) return res.status(404).json({ message: "Không tìm thấy sách" });
+    if (!bookById)
+      return res.status(404).json({ message: "Không tìm thấy sách" });
 
     const book = await bookPrisma.update({
       where: {
@@ -114,9 +126,7 @@ export const updateBook = async (req: Request, res: Response) => {
 
     if (!book) return res.status(400).json({ message: "Cập nhật thất bại" });
 
-    return res
-      .status(200)
-      .json({ message: "Cập nhật thành công", data: book });
+    return res.status(200).json({ message: "Cập nhật thành công", data: book });
   } catch (error) {
     return res.status(500).json({
       message: error,
@@ -134,7 +144,8 @@ export const deleteBook = async (req: Request, res: Response) => {
       },
     });
 
-    if (!bookById) return res.status(404).json({ message: "Không tìm thấy sách" });
+    if (!bookById)
+      return res.status(404).json({ message: "Không tìm thấy sách" });
 
     const book = await bookPrisma.delete({
       where: { id: bookId },

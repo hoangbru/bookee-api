@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { generateRandomString } from "../helpers/randomString";
+import shortUUID from "short-uuid";
 
 const orderPrisma = new PrismaClient().order;
 const userPrisma = new PrismaClient().user;
@@ -20,12 +20,14 @@ export const createOrder = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Không tìm thấy người dùng" });
 
     const order = await orderPrisma.create({
-      data: { ...body, code: generateRandomString() },
+      data: { ...body, code: shortUUID.generate() },
     });
 
     if (!order) return res.status(400).json({ message: "Đặt hàng thất bại" });
 
-    return res.status(201).json({ message: "Đặt hàng thành công", data: order });
+    return res
+      .status(201)
+      .json({ message: "Đặt hàng thành công", data: order });
   } catch (error) {
     return res.status(500).json({
       message: error,
@@ -94,7 +96,7 @@ export const getOrderById = async (req: Request, res: Response) => {
             bookId: true,
             book: true,
             quantity: true,
-          }
+          },
         },
         user: {
           select: {

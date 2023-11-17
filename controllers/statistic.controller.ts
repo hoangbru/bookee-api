@@ -87,7 +87,7 @@ export const getTotalRevenue = async (req: Request, res: Response) => {
 export const getOrderCount = async (req: Request, res: Response) => {
   try {
     const query = req.query;
-    const status = query.status ? { status: query.status as string } : {}; // Kiểm tra nếu status tồn tại, thiết lập điều kiện, ngược lại để điều kiện là trống
+    const status = query.status ? { status: query.status as string } : {};
     const salesCount = await orderPrisma.count({
       where: status,
     });
