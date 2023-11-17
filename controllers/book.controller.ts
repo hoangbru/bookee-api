@@ -32,6 +32,11 @@ export const getAllBooks = async (req: Request, res: Response) => {
     const books = await bookPrisma.findMany({
       take: itemPerPage,
       skip,
+      include: {
+        category: true,
+        reviews: true,
+        promotion: true,
+      },
       orderBy: {
         createdAt: "desc",
       },

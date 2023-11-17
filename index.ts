@@ -9,6 +9,7 @@ import {
   orderRouter,
   orderDetailRouter,
   userRouter,
+  statisticRouter
 } from "./routes";
 
 dotenv.config();
@@ -24,6 +25,7 @@ const routers = [
   orderRouter,
   orderDetailRouter,
   userRouter,
+  statisticRouter
 ];
 
 app.use(cors());

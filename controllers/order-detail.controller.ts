@@ -51,11 +51,14 @@ export const getAllOrderDetails = async (req: Request, res: Response) => {
     const itemPerPage = Number(query.item_per_page) || 10;
     const page = Number(query.page) || 1;
     const skip = page > 1 ? (page - 1) * itemPerPage : 0;
-    const total = await bookPrisma.count();
+    const total = await orderDetailPrisma.count();
 
-    const books = await bookPrisma.findMany({
+    const orderDetails = await orderDetailPrisma.findMany({
       take: itemPerPage,
       skip,
+      include: {
+        book: true
+      },
       orderBy: {
         createdAt: "desc",
       },
@@ -63,7 +66,7 @@ export const getAllOrderDetails = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: "Thực hiện thành công",
-      data: books,
+      data: orderDetails,
       result: {
         currentPage: page,
         itemPerPage,
