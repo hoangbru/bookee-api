@@ -12,12 +12,12 @@ const bookRouter = Router();
 bookRouter
   .route("/books")
   .get(getAllBooks)
-  .post(createBook);
+  .post(createBook)
+  .patch(updateBook)
+  .delete(deleteBook);
 
 bookRouter
   .route("/book/:id")
   .get(getBookById)
-  .patch(updateBook)
-  .delete(deleteBook);
 
 export default bookRouter;

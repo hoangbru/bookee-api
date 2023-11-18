@@ -9,12 +9,13 @@ import {
   orderRouter,
   orderDetailRouter,
   userRouter,
-  statisticRouter
+  statisticRouter,
+  reviewRouter,
 } from "./routes";
 
 dotenv.config();
 
-const port: number = 8080
+const port: number = 8080;
 
 const app = express();
 
@@ -25,7 +26,8 @@ const routers = [
   orderRouter,
   orderDetailRouter,
   userRouter,
-  statisticRouter
+  statisticRouter,
+  reviewRouter,
 ];
 
 app.use(cors());

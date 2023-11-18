@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "node index.ts",
+    "dev": "nodemon index.ts",
     "migrate": "prisma migrate dev"
   },
   "keywords": [],

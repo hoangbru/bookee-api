@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import shortUUID from "short-uuid";
 
@@ -38,14 +38,24 @@ export const createOrder = async (req: Request, res: Response) => {
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
     const query = req.query;
+    const searchTerm = query.code ? query.code.toString() : "";
     const itemPerPage = Number(query.item_per_page) || 10;
     const page = Number(query.page) || 1;
     const skip = page > 1 ? (page - 1) * itemPerPage : 0;
-    const total = await orderPrisma.count();
+
+    const whereCondition: Prisma.OrderWhereInput = {
+      code: {
+        contains: searchTerm,
+      },
+    };
+    const total = await orderPrisma.count({
+      where: whereCondition,
+    });
 
     const orders = await orderPrisma.findMany({
       take: itemPerPage,
       skip,
+      where: whereCondition,
       include: {
         user: {
           select: {

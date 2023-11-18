@@ -12,9 +12,7 @@ export const createCategory = async (req: Request, res: Response) => {
 
     if (!category) return res.status(400).json({ message: "Thêm thất bại" });
 
-    return res
-      .status(201)
-      .json({ message: "Thêm thành công", data: category });
+    return res.status(201).json({ message: "Thêm thành công", data: category });
   } catch (error) {
     return res.status(500).json({
       message: error,
@@ -99,10 +97,11 @@ export const updateCategory = async (req: Request, res: Response) => {
       where: {
         id: categoryId,
       },
-      data: body,
+      data: { ...body, id: categoryId },
     });
 
-    if (!category) return res.status(400).json({ message: "Cập nhật thất bại" });
+    if (!category)
+      return res.status(400).json({ message: "Cập nhật thất bại" });
 
     return res
       .status(200)

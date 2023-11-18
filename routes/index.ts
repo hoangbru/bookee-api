@@ -5,6 +5,7 @@ import orderRouter from "./order.router";
 import orderDetailRouter from "./order-detail.router";
 import userRouter from "./user.router";
 import statisticRouter from "./statistic.router";
+import reviewRouter from "./review.router";
 
 export {
   authRouter,
@@ -13,5 +14,6 @@ export {
   orderRouter,
   orderDetailRouter,
   userRouter,
-  statisticRouter
+  statisticRouter,
+  reviewRouter
 }

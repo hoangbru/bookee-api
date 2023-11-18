@@ -8,7 +8,11 @@ export const createBook = async (req: Request, res: Response) => {
     const body = req.body;
 
     const book = await bookPrisma.create({
-      data: body,
+      data: {
+        ...body,
+        price: Number(body.price),
+        categoryId: Number(body.categoryId),
+      },
     });
 
     if (!book) return res.status(400).json({ message: "Thêm thất bại" });
@@ -31,7 +35,6 @@ export const getAllBooks = async (req: Request, res: Response) => {
     const itemPerPage = Number(query.item_per_page) || 10;
     const page = Number(query.page) || 1;
     const skip = page > 1 ? (page - 1) * itemPerPage : 0;
-    const total = await bookPrisma.count();
 
     const whereCondition: Prisma.BookWhereInput = {
       title: {
@@ -40,6 +43,10 @@ export const getAllBooks = async (req: Request, res: Response) => {
       },
       categoryId: categoryId !== undefined ? { equals: categoryId } : undefined,
     };
+
+    const total = await bookPrisma.count({
+      where: whereCondition,
+    });
 
     const books = await bookPrisma.findMany({
       take: itemPerPage,
@@ -81,7 +88,24 @@ export const getBookById = async (req: Request, res: Response) => {
       },
       include: {
         category: true,
-        reviews: true,
+        reviews: {
+          select: {
+            id: true,
+            userId: true,
+            user: {
+              select: {
+                username: true,
+                image: true,
+                fullName: true,
+              },
+            },
+            bookId: true,
+            rating: true,
+            comment: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
         promotion: true,
       },
     });
@@ -104,9 +128,8 @@ export const getBookById = async (req: Request, res: Response) => {
 
 export const updateBook = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const bookId = Number(id);
     const body = req.body;
+    const bookId = Number(body.id);
 
     const bookById = await bookPrisma.findUnique({
       where: {
@@ -121,7 +144,12 @@ export const updateBook = async (req: Request, res: Response) => {
       where: {
         id: bookId,
       },
-      data: body,
+      data: {
+        ...body,
+        id: bookId,
+        price: Number(body.price),
+        categoryId: Number(body.categoryId),
+      },
     });
 
     if (!book) return res.status(400).json({ message: "Cập nhật thất bại" });
