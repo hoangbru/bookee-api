@@ -14,6 +14,11 @@ export const getAllUsers = async (req: Request, res: Response) => {
     const users = await userPrisma.findMany({
       take: itemPerPage,
       skip,
+      where: {
+        NOT: {
+          role: "ADMIN",
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },
