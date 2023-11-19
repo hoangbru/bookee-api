@@ -25,7 +25,6 @@ pnpm i
 # or
 npm i
 ```
-```
 
 - Create .env file:
 ```bash
