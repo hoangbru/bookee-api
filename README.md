@@ -10,7 +10,7 @@
 - Clone the Project:
 
 ```bash
-git clone https://github.com/hoangbru/spotify-clone.git
+git clone https://github.com/hoangbru/bookee-api.git
 ```
 
 - Create .env file:
@@ -19,7 +19,7 @@ DATABASE_URL="postgresql://postgres:6oB1Do2gudMH1Qxp@db.dzjnhjzivoneaxcgrmfb.sup
 JWT_SECRET="hehe"
 
 ```
-## Run project:
+## Run project
 
 - Migrate prisma 
 
@@ -41,6 +41,11 @@ yarn dev
 pnpm dev
 ```
 
-Open [http://localhost:8080](http://localhost:8080) with your browser to see the result.
-
+Now the server is running on port 8080 (http://localhost:8080/api)
+Endpoints: 
+- /books
+- /book/:id
+- /categories
+- /category/:id
+- /orders
 You can use Postman to fetch data .
