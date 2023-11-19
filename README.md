@@ -1,4 +1,4 @@
-## This is a book-selling web project implemented by Pham Viet Hoang(PH21107)
+## This is a book-selling web project implemented by Pham Viet Hoang(PH21107), use pnpm as the package management tool
 
 ## Main Technologies
 
@@ -12,6 +12,20 @@
 ```bash
 git clone https://github.com/hoangbru/bookee-api.git
 ```
+- Access the project on your local machine:
+
+```bash
+cd bookee-api
+```
+
+- Install all packages:
+
+```bash
+pnpm i
+# or
+npm i
+```
+```
 
 - Create .env file:
 ```bash
@@ -24,28 +38,19 @@ JWT_SECRET="hehe"
 - Migrate prisma 
 
 ```bash
-npm run migrate
-# or
-yarn migrate
-# or
 pnpm migrate
+# or
+npm run migrate
 ```
 
 - Run server local
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
+# or
+npm run dev
 ```
 
-Now the server is running on port 8080 (http://localhost:8080/api)
-Endpoints: 
-- /books
-- /book/:id
-- /categories
-- /category/:id
-- /orders
-You can use Postman to fetch data .
+Now the server is running on port 8080 (http://localhost:8080/api).
+
+You can use Postman to fetch data.
