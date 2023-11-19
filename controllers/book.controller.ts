@@ -105,6 +105,9 @@ export const getBookById = async (req: Request, res: Response) => {
             createdAt: true,
             updatedAt: true,
           },
+          orderBy: {
+            createdAt: "desc"
+          }
         },
         promotion: true,
       },
