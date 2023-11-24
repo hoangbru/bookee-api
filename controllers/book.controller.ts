@@ -167,7 +167,7 @@ export const updateBook = async (req: Request, res: Response) => {
 
 export const deleteBook = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const bookId = Number(id);
     const bookById = await bookPrisma.findUnique({
       where: {
