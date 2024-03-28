@@ -1,9 +1,9 @@
-## This is a book-selling web project implemented by Pham Viet Hoang(PH21107), use pnpm as the package management tool
+## This is a book-selling web project, use npm as the package management tool
 
 ## Main Technologies
 
-- Nodejs/express.
-- Prisma.
+- Node.js/Express.js
+- Prisma
 
 ## Installation
 
@@ -21,15 +21,15 @@ cd bookee-api
 - Install all packages:
 
 ```bash
-pnpm i
-# or
 npm i
+# or
+pnpm i
 ```
 
 - Create .env file:
 ```bash
-DATABASE_URL="postgresql://postgres:6oB1Do2gudMH1Qxp@db.dzjnhjzivoneaxcgrmfb.supabase.co:5432/postgres"
-JWT_SECRET="hehe"
+DATABASE_URL=""
+JWT_SECRET=""
 
 ```
 ## Run project
@@ -37,17 +37,17 @@ JWT_SECRET="hehe"
 - Migrate prisma 
 
 ```bash
-pnpm migrate
+npm migrate
 # or
-npm run migrate
+pnpm run migrate
 ```
 
 - Run server local
 
 ```bash
-pnpm dev
+npm dev
 # or
-npm run dev
+pnpm run dev
 ```
 
 Now the server is running on port 8080 (http://localhost:8080/api).
