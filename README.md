@@ -29,6 +29,7 @@ pnpm i
 - Create .env file:
 ```bash
 DATABASE_URL=""
+DIRECT_URL=""
 JWT_SECRET=""
 
 ```
