@@ -11,11 +11,11 @@ import {
   userRouter,
   statisticRouter,
   reviewRouter,
-} from "./routes";
+} from "./routes/index.js";
 
 dotenv.config();
 
-const port: number = 8080;
+const port = 8080;
 
 const app = express();
 

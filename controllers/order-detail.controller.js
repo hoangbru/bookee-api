@@ -1,14 +1,13 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
 
 const orderDetailPrisma = new PrismaClient().orderDetail;
 const orderPrisma = new PrismaClient().order;
 const bookPrisma = new PrismaClient().book;
 
-export const createOrderDetail = async (req: Request, res: Response) => {
+export const createOrderDetail = async (req, res) => {
   try {
     const body = req.body;
-    const data: any[] = [];
+    const data= [];
 
     for (const item of body) {
       const order = await orderPrisma.findUnique({

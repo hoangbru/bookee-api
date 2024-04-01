@@ -1,11 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const authPrisma = new PrismaClient().user;
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req, res) => {
   try {
     const { email, username, password } = req.body;
 
@@ -46,7 +45,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 

@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
 
 const userPrisma = new PrismaClient().user;
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (req, res) => {
   try {
     const query = req.query;
     const itemPerPage = Number(query.item_per_page) || 10;
@@ -40,7 +39,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = Number(id);
@@ -88,7 +87,7 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = Number(id);
@@ -120,7 +119,7 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = Number(id);

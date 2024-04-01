@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
 
 const categoryPrisma = new PrismaClient().category;
 
-export const createCategory = async (req: Request, res: Response) => {
+export const createCategory = async (req, res) => {
   try {
     const body = req.body;
     const category = await categoryPrisma.create({
@@ -20,7 +19,7 @@ export const createCategory = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllCategories = async (req: Request, res: Response) => {
+export const getAllCategories = async (req, res) => {
   try {
     const query = req.query;
     const itemPerPage = Number(query.item_per_page) || 10;
@@ -52,7 +51,7 @@ export const getAllCategories = async (req: Request, res: Response) => {
   }
 };
 
-export const getCategoryById = async (req: Request, res: Response) => {
+export const getCategoryById = async (req, res) => {
   try {
     const { id } = req.params;
     const categoryId = Number(id);
@@ -78,7 +77,7 @@ export const getCategoryById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCategory = async (req: Request, res: Response) => {
+export const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
     const categoryId = Number(id);
@@ -113,7 +112,7 @@ export const updateCategory = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteCategory = async (req: Request, res: Response) => {
+export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
     const categoryId = Number(id);

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getGraphRevenue, getOrderCount, getTotalRevenue } from "../controllers/statistic.controller";
+import { getGraphRevenue, getOrderCount, getTotalRevenue } from "../controllers/statistic.controller.js";
 
 const statisticRouter = Router();
 

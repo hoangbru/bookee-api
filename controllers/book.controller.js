@@ -1,9 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
 
 const bookPrisma = new PrismaClient().book;
 
-export const createBook = async (req: Request, res: Response) => {
+export const createBook = async (req, res) => {
   try {
     const body = req.body;
 
@@ -25,7 +24,7 @@ export const createBook = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllBooks = async (req: Request, res: Response) => {
+export const getAllBooks = async (req, res) => {
   try {
     const query = req.query;
     const searchTerm = query.title ? query.title.toString().toLowerCase() : "";
@@ -36,7 +35,7 @@ export const getAllBooks = async (req: Request, res: Response) => {
     const page = Number(query.page) || 1;
     const skip = page > 1 ? (page - 1) * itemPerPage : 0;
 
-    const whereCondition: Prisma.BookWhereInput = {
+    const whereCondition = {
       title: {
         contains: searchTerm,
         mode: "insensitive",
@@ -78,7 +77,7 @@ export const getAllBooks = async (req: Request, res: Response) => {
   }
 };
 
-export const getBookById = async (req: Request, res: Response) => {
+export const getBookById = async (req, res) => {
   try {
     const { id } = req.params;
     const bookId = Number(id);
@@ -129,7 +128,7 @@ export const getBookById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateBook = async (req: Request, res: Response) => {
+export const updateBook = async (req, res) => {
   try {
     const body = req.body;
     const bookId = Number(body.id);
@@ -165,7 +164,7 @@ export const updateBook = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteBook = async (req: Request, res: Response) => {
+export const deleteBook = async (req, res) => {
   try {
     const { id } = req.body;
     const bookId = Number(id);

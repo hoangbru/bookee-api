@@ -1,11 +1,10 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
 import shortUUID from "short-uuid";
 
 const orderPrisma = new PrismaClient().order;
 const userPrisma = new PrismaClient().user;
 
-export const createOrder = async (req: Request, res: Response) => {
+export const createOrder = async (req, res) => {
   try {
     const body = req.body;
     const userId = body.userId;
@@ -35,7 +34,7 @@ export const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllOrders = async (req: Request, res: Response) => {
+export const getAllOrders = async (req, res) => {
   try {
     const query = req.query;
     const searchTerm = query.code ? query.code.toString() : "";
@@ -43,7 +42,7 @@ export const getAllOrders = async (req: Request, res: Response) => {
     const page = Number(query.page) || 1;
     const skip = page > 1 ? (page - 1) * itemPerPage : 0;
 
-    const whereCondition: Prisma.OrderWhereInput = {
+    const whereCondition = {
       code: {
         contains: searchTerm,
       },
@@ -90,7 +89,7 @@ export const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
-export const getOrderById = async (req: Request, res: Response) => {
+export const getOrderById = async (req, res) => {
   try {
     const { id } = req.params;
     const orderId = Number(id);
@@ -135,7 +134,7 @@ export const getOrderById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateOrder = async (req: Request, res: Response) => {
+export const updateOrder = async (req, res) => {
   try {
     const { id } = req.params;
     const orderId = Number(id);

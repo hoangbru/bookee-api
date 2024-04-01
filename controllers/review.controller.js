@@ -1,11 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
 
 const reviewPrisma = new PrismaClient().review;
 const userPrisma = new PrismaClient().user;
 const bookPrisma = new PrismaClient().book;
 
-export const createReview = async (req: Request, res: Response) => {
+export const createReview = async (req, res) => {
   try {
     const body = req.body;
     const userId = Number(body.userId);
@@ -40,7 +39,7 @@ export const createReview = async (req: Request, res: Response) => {
   }
 };
 
-export const updateReview = async (req: Request, res: Response) => {
+export const updateReview = async (req, res) => {
   try {
     const body = req.body;
     const reviewId = Number(body.id);

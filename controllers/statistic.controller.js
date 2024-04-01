@@ -1,14 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
-
-interface GraphData {
-  name: string;
-  total: number;
-}
 
 const orderPrisma = new PrismaClient().order;
 
-export const getGraphRevenue = async (req: Request, res: Response) => {
+export const getGraphRevenue = async (req, res) => {
   try {
     const paidOrders = await orderPrisma.findMany({
       where: {
@@ -16,7 +10,7 @@ export const getGraphRevenue = async (req: Request, res: Response) => {
       },
     });
 
-    const monthlyRevenue: { [key: number]: number } = {};
+    const monthlyRevenue = {};
 
     // Grouping the orders by month and summing the revenue
     for (const order of paidOrders) {
@@ -28,7 +22,7 @@ export const getGraphRevenue = async (req: Request, res: Response) => {
     }
 
     // Converting the grouped data into the format expected by the graph
-    const graphData: GraphData[] = [
+    const graphData = [
       { name: "Tháng 1", total: 0 },
       { name: "Tháng 2", total: 0 },
       { name: "Tháng 3", total: 0 },
@@ -60,7 +54,7 @@ export const getGraphRevenue = async (req: Request, res: Response) => {
   }
 };
 
-export const getTotalRevenue = async (req: Request, res: Response) => {
+export const getTotalRevenue = async (req, res) => {
   try {
     const paidOrders = await orderPrisma.findMany({
       where: {
@@ -84,10 +78,10 @@ export const getTotalRevenue = async (req: Request, res: Response) => {
   }
 };
 
-export const getOrderCount = async (req: Request, res: Response) => {
+export const getOrderCount = async (req, res) => {
   try {
     const query = req.query;
-    const status = query.status ? { status: query.status as string } : {};
+    const status = query.status ? { status: query.status } : {};
     const salesCount = await orderPrisma.count({
       where: status,
     });
